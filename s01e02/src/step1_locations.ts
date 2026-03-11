@@ -1,5 +1,14 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import { resolve } from 'node:path';
 import { z } from 'zod';
+
+// Ładujemy .env z kilku poziomów:
+// - bieżący folder (np. S1E2/findhim)
+// - katalog wyżej (np. S1E2)
+// - dwa poziomy wyżej (np. główny folder szkolenia)
+dotenv.config();
+dotenv.config({ path: resolve(process.cwd(), '..', '.env') });
+dotenv.config({ path: resolve(process.cwd(), '..', '..', '.env') });
 
 const LocationSchema = z.object({
   code: z.string().min(1),
