@@ -1,0 +1,49 @@
+{
+  "apikey": "klucz_z_platformy",
+  "task": "people",
+  "answer": [
+    {
+      "name": "Cezary",
+      "surname": "Żurek",
+      "gender": "M",
+      "born": 1987,
+      "city": "Grudziądz",
+      "tags": [
+        "transport",
+        "praca fizyczna"
+      ]
+    },
+    {
+      "name": "Jacek",
+      "surname": "Nowak",
+      "gender": "M",
+      "born": 1991,
+      "city": "Grudziądz",
+      "tags": [
+        "transport"
+      ]
+    },
+    {
+      "name": "Wojciech",
+      "surname": "Bielik",
+      "gender": "M",
+      "born": 1986,
+      "city": "Grudziądz",
+      "tags": [
+        "transport",
+        "praca fizyczna"
+      ]
+    },
+    {
+      "name": "Wacław",
+      "surname": "Jasiński",
+      "gender": "M",
+      "born": 1986,
+      "city": "Grudziądz",
+      "tags": [
+        "praca fizyczna",
+        "transport"
+      ]
+    }
+  ]
+}

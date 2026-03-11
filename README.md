@@ -1,35 +1,33 @@
 # AI_DEVS4 S1E2 – findhim (TypeScript)
 
-## Uruchomienie (krok 1 – lista elektrowni i kody)
+## Uruchomienie (wersja agentowa)
 
-1) Zainstaluj zależności:
+1. Zainstaluj zależności w katalogu zadania:
 
 ```bash
+cd s01e02
 npm install
 ```
 
-2) Dodaj plik `.env` w katalogu projektu:
+2. W katalogu głównym repo (`s1e2`) ustaw w `.env`:
 
 ```env
 AIDEVS_KEY=twoj_klucz_z_platformy
+OPENROUTER_API_KEY=sk-or-...
 ```
 
-Możesz skopiować `.env.example` → `.env`.
-
-3) Odpal krok 1:
+3. Uruchom agenta (Function Calling, OpenRouter). Na koniec wynik jest wysyłany na `/verify`:
 
 ```bash
-npm run step1
+cd s01e02
+npm run agent:run
 ```
 
-Skrypt pobierze:
-`https://hub.ag3nts.org/data/<AIDEVS_KEY>/findhim_locations.json`
-i wypisze listę w formacie `CODE: NAME`.
+Agent używa narzędzi: lista podejrzanych, lista elektrowni, współrzędne osób z API, poziom dostępu, odległość Haversine. Współrzędne elektrowni (geokodowanie) podaje LLM.
 
-## Co robi skrypt `src/step1_locations.ts` (w skrócie)
+---
 
-- Bierze klucz z `process.env.AIDEVS_KEY` (czyli z `.env`).
-- Składa URL do pliku JSON.
-- Pobiera JSON przez `fetch`.
-- Waliduje strukturę danych przez `zod`, żeby od razu wykryć, że API zwróciło coś innego niż oczekujemy.
+**Inne skrypty (pomocniczo):** `step1` – lista elektrowni z huba; `step2` – lokalizacje osoby; `step3` – access level; `openrouter:test` – test połączenia z OpenRouter.
+
+**Ciekawostka:** Ścieżka offline (`npm run step4`, opcjonalnie `-- --send`) rozwiązuje to samo zadanie bez LLM – elektrownie geokodowane przez Nominatim (OpenStreetMap). Służy do porównania i testów.
 
