@@ -80,6 +80,7 @@ export async function loadSuspects(): Promise<Suspect[]> {
   }));
 }
 
+/** Pobiera listę elektrowni z huba. Zwraca tylko aktywne (is_active !== false). */
 export async function loadPowerPlants(): Promise<PowerPlant[]> {
   const key = requireEnv('AIDEVS_KEY');
   const url = `https://hub.ag3nts.org/data/${encodeURIComponent(key)}/findhim_locations.json`;
@@ -99,16 +100,34 @@ export async function loadPowerPlants(): Promise<PowerPlant[]> {
   }
 
   const entries = parsed.data.power_plants;
-  return Object.entries(entries).map(([name, plant]) => ({
+  const all = Object.entries(entries).map(([name, plant]) => ({
     name,
     code: plant.code,
     isActive: plant.is_active,
     power: plant.power
   }));
+  return all.filter((p) => p.isActive !== false);
 }
 
-/** Geokodowanie nazwy miejsca (miasto / elektrownia) przez Nominatim (OpenStreetMap). Bez klucza API. */
+function sleepMs(ms: number): Promise<void> {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+let lastNominatimCall = 0;
+const NOMINATIM_MIN_INTERVAL_MS = 1100;
+
+async function nominatimThrottle(): Promise<void> {
+  const now = Date.now();
+  const elapsed = now - lastNominatimCall;
+  if (elapsed < NOMINATIM_MIN_INTERVAL_MS) {
+    await sleepMs(NOMINATIM_MIN_INTERVAL_MS - elapsed);
+  }
+}
+
+/** Geokodowanie nazwy miejsca (miasto / elektrownia) przez Nominatim (OpenStreetMap). Bez klucza API. Respektuje 1 req/s. */
 export async function geocodePlace(placeName: string): Promise<Coordinate> {
+  await nominatimThrottle();
+  console.log('[OSM] Geokodowanie:', placeName);
   const query = encodeURIComponent(`${placeName.trim()}, Poland`);
   const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`;
   const res = await fetch(url, {
@@ -126,22 +145,40 @@ export async function geocodePlace(placeName: string): Promise<Coordinate> {
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
     throw new Error(`Nieprawidłowe współrzędne z geokodowania: ${placeName}`);
   }
+  lastNominatimCall = Date.now();
   return { latitude: lat, longitude: lon };
 }
 
-function sleepMs(ms: number): Promise<void> {
-  return new Promise((r) => setTimeout(r, ms));
+/** Reverse geocode: współrzędne → nazwa miejscowości (Nominatim/OSM). Respektuje 1 req/s. */
+export async function reverseGeocodePlace(lat: number, lon: number): Promise<string> {
+  await nominatimThrottle();
+  const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`;
+  const res = await fetch(url, {
+    headers: { 'User-Agent': 'AI_DEVS4-findhim/1.0 (TypeScript)' }
+  });
+  if (!res.ok) {
+    lastNominatimCall = Date.now();
+    return `${lat}, ${lon}`;
+  }
+  const data = (await res.json()) as { address?: { city?: string; town?: string; village?: string; municipality?: string; county?: string }; display_name?: string };
+  const addr = data.address;
+  if (addr) {
+    const name = addr.city ?? addr.town ?? addr.village ?? addr.municipality ?? addr.county;
+    if (name) return name;
+  }
+  lastNominatimCall = Date.now();
+  return typeof data.display_name === 'string' ? data.display_name.split(',')[0]?.trim() ?? `${lat}, ${lon}` : `${lat}, ${lon}`;
 }
 
 export type PowerPlantWithCoordinates = PowerPlant & { coordinates: Coordinate };
 
+/** Zwraca elektrownie z współrzędnymi (tylko aktywne – loadPowerPlants już je filtruje). */
 export async function loadPowerPlantsWithCoordinates(): Promise<PowerPlantWithCoordinates[]> {
   const plants = await loadPowerPlants();
   const result: PowerPlantWithCoordinates[] = [];
   for (const p of plants) {
     const coordinates = await geocodePlace(p.name);
     result.push({ ...p, coordinates });
-    await sleepMs(1100); // Nominatim: max 1 req/s
   }
   return result;
 }
@@ -154,6 +191,7 @@ export type VerifyAnswer = {
 };
 
 export async function sendResultToVerify(answer: VerifyAnswer): Promise<{ ok: boolean; body: unknown }> {
+  console.log('[verify] Wysyłam:', JSON.stringify(answer));
   const apikey = requireEnv('AIDEVS_KEY');
   const res = await fetch('https://hub.ag3nts.org/verify', {
     method: 'POST',
@@ -236,5 +274,38 @@ export function haversineDistanceKm(a: Coordinate, b: Coordinate): number {
 
   const c = 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
   return R * c;
+}
+
+export type NearestPlantResult = {
+  name: string;
+  surname: string;
+  nearest_plant_code: string;
+  distance_km: number;
+};
+
+/** Dla jednej osoby zwraca kod najbliższej elektrowni (aktywnej) i odległość w km. */
+export async function getNearestPlantForPerson(name: string, surname: string): Promise<NearestPlantResult> {
+  const locations = await getLocationsForPerson({ name, surname });
+  if (locations.length === 0) {
+    return { name, surname, nearest_plant_code: '', distance_km: Infinity };
+  }
+  const plants = await loadPowerPlantsWithCoordinates();
+  let minDistance = Infinity;
+  let nearestCode = '';
+  for (const loc of locations) {
+    for (const plant of plants) {
+      const d = haversineDistanceKm(loc, plant.coordinates);
+      if (d < minDistance) {
+        minDistance = d;
+        nearestCode = plant.code;
+      }
+    }
+  }
+  return {
+    name,
+    surname,
+    nearest_plant_code: nearestCode,
+    distance_km: Math.round(minDistance * 100) / 100
+  };
 }
 

@@ -23,11 +23,9 @@ cd s01e02
 npm run agent:run
 ```
 
-Agent używa narzędzi: lista podejrzanych, lista elektrowni, współrzędne osób z API, poziom dostępu, odległość Haversine. Współrzędne elektrowni (geokodowanie) podaje LLM.
+Agent używa narzędzi: lista podejrzanych, lista elektrowni, współrzędne elektrowni z LLM (geokodowanie bez hardkodowania), lokalizacje osób z API, poziom dostępu, odległość Haversine.
 
 ---
 
-**Inne skrypty (pomocniczo):** `step1` – lista elektrowni z huba; `step2` – lokalizacje osoby; `step3` – access level; `openrouter:test` – test połączenia z OpenRouter.
-
-**Ciekawostka:** Ścieżka offline (`npm run step4`, opcjonalnie `-- --send`) rozwiązuje to samo zadanie bez LLM – elektrownie geokodowane przez Nominatim (OpenStreetMap). Służy do porównania i testów.
+**Skrypty pomocnicze:** `step1` – lista elektrowni; `step2` – lokalizacje osoby; `step3` – access level; `openrouter:test` – test połączenia z OpenRouter.
 
