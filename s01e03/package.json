@@ -1,0 +1,25 @@
+{
+  "name": "s01e03",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/http/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/http/server.js",
+    "dev": "ts-node src/http/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.5.0",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "node-fetch": "^3.3.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

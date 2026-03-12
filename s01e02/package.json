@@ -10,7 +10,9 @@
     "step3": "npm run build && node dist/step3_access_level.js",
     "step4": "npm run build && node dist/step4_offline.js",
     "openrouter:test": "npm run build && node dist/openrouter_test.js",
-    "agent:run": "npm run build && node dist/findhim_agent.js"
+    "agent:run": "npm run build && node dist/findhim_agent.js",
+    "riddle:send": "npm run build && node dist/send_riddle.js",
+    "flag:send": "npm run build && node dist/send_flag.js"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
