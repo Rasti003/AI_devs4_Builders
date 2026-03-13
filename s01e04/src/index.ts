@@ -70,8 +70,8 @@ Dane przesyłki:
 Działaj krok po kroku:
 1. Pobierz dokumentację SPK: https://hub.ag3nts.org/dane/doc/index.md
 2. Pobierz zasady dotyczące wagonów: https://hub.ag3nts.org/dane/doc/dodatkowe-wagony.md
-3. Na podstawie dokumentacji dobierz odpowiednią kategorię, kod trasy i oblicz WDP
-4. Wypełnij deklarację DOKŁADNIE według wzoru z Załącznika E dokumentacji
+3. Pobierz wzór deklaracji (Załącznik E): https://hub.ag3nts.org/dane/doc/zalacznik-E.md
+4. Wypełnij deklarację DOKŁADNIE według wzoru z załącznika E - zachowaj wszystkie separatory i nagłówki
 5. Wyślij deklarację narzędziem submit_declaration
 
 Ważne zasady:
