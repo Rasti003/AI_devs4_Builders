@@ -1,0 +1,31 @@
+[
+  {
+    "id": "s01e01",
+    "label": "Lekcja 1 – OpenRouter people",
+    "cwd": "s01e01",
+    "command": "python",
+    "args": ["openrouter_structured_people.py"]
+  },
+  {
+    "id": "s01e02",
+    "label": "Lekcja 2 – Findhim (agent)",
+    "cwd": "s01e02",
+    "command": "npm",
+    "args": ["run", "agent:run"]
+  },
+  {
+    "id": "s01e03",
+    "label": "Lekcja 3 – MCP server",
+    "cwd": "s01e03",
+    "command": "npm",
+    "args": ["run", "start"],
+    "longRunning": true
+  },
+  {
+    "id": "s01e04",
+    "label": "Lekcja 4 – Agent SPK (sendit)",
+    "cwd": "s01e04",
+    "command": "npm",
+    "args": ["run", "start"]
+  }
+]
