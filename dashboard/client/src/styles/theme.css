@@ -1,0 +1,470 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+:root {
+  --bg:          #020603;
+  --bg-panel:    #030a04;
+  --bg-card:     #040e05;
+  --green:       #00ff41;
+  --green-dim:   #00802b;
+  --green-glow:  rgba(0, 255, 65, 0.25);
+  --amber:       #ffb300;
+  --amber-dim:   #7a5500;
+  --red:         #ff2a00;
+  --cyan:        #00e5ff;
+  --muted:       #2a4a2d;
+  --border:      #0d2b10;
+  --font:        'Share Tech Mono', 'JetBrains Mono', 'Courier New', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── CRT body ────────────────────────────────────────────────────── */
+body {
+  background: var(--bg);
+  color: var(--green);
+  font-family: var(--font);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* scanlines overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.18) 3px,
+    rgba(0, 0, 0, 0.18) 4px
+  );
+}
+
+/* vignette */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.65) 100%);
+}
+
+/* ── Layout ──────────────────────────────────────────────────────── */
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ──────────────────────────────────────────────────────── */
+.app-header {
+  padding: 0.6rem 1.2rem;
+  border-bottom: 1px solid var(--green-dim);
+  background: rgba(0, 255, 65, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  position: relative;
+}
+
+.app-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+  box-shadow: 0 0 8px var(--green);
+}
+
+.app-title {
+  font-size: 1.1rem;
+  letter-spacing: 0.3em;
+  color: var(--green);
+  text-shadow: 0 0 12px var(--green), 0 0 30px var(--green-glow);
+  text-transform: uppercase;
+  animation: flicker 8s infinite;
+}
+
+.app-title-prefix {
+  color: var(--amber);
+  text-shadow: 0 0 8px var(--amber);
+  margin-right: 0.5rem;
+}
+
+.app-subtitle {
+  font-size: 0.62rem;
+  color: var(--muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.app-status-bar {
+  position: absolute;
+  right: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.6rem;
+  color: var(--green-dim);
+  letter-spacing: 0.1em;
+  display: flex;
+  gap: 1.2rem;
+}
+
+.app-status-dot {
+  display: inline-block;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  margin-right: 0.3rem;
+  animation: blink 1.4s step-end infinite;
+}
+
+/* ── Main ────────────────────────────────────────────────────────── */
+.app-main {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────── */
+.app-sidebar {
+  width: 270px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  background: var(--bg-panel);
+  padding: 0.7rem 0.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.app-sidebar::-webkit-scrollbar { width: 4px; }
+.app-sidebar::-webkit-scrollbar-track { background: transparent; }
+.app-sidebar::-webkit-scrollbar-thumb { background: var(--green-dim); }
+
+/* ── Center ──────────────────────────────────────────────────────── */
+.app-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0.8rem;
+}
+
+/* ── Placeholder ─────────────────────────────────────────────────── */
+.app-placeholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  border: 1px solid var(--border);
+  background: var(--bg-panel);
+  position: relative;
+  overflow: hidden;
+}
+
+/* corner decorations */
+.app-placeholder::before,
+.app-placeholder::after {
+  content: '';
+  position: absolute;
+  width: 20px; height: 20px;
+  border-color: var(--green-dim);
+  border-style: solid;
+}
+.app-placeholder::before {
+  top: 8px; left: 8px;
+  border-width: 1px 0 0 1px;
+}
+.app-placeholder::after {
+  bottom: 8px; right: 8px;
+  border-width: 0 1px 1px 0;
+}
+
+.app-placeholder-ascii {
+  font-size: 0.55rem;
+  color: var(--muted);
+  line-height: 1.3;
+  text-align: center;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+}
+
+.app-placeholder-text {
+  font-size: 0.75rem;
+  color: var(--green-dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  animation: blink 2s step-end infinite;
+}
+
+/* ── Lesson list ─────────────────────────────────────────────────── */
+.lesson-list-loading,
+.lesson-list-error {
+  font-size: 0.7rem;
+  color: var(--amber);
+  padding: 0.4rem 0.5rem;
+  letter-spacing: 0.08em;
+}
+
+.lesson-list-title {
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0 0.4rem 0.3rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.3rem;
+}
+
+.lesson-list-running-hint {
+  font-size: 0.58rem;
+  color: var(--amber);
+  padding: 0 0.4rem;
+  letter-spacing: 0.08em;
+  animation: blink 1.4s step-end infinite;
+}
+
+.lesson-cards {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lesson-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--muted);
+  padding: 0.3rem 0.45rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: border-left-color 0.1s, background 0.1s;
+  cursor: default;
+}
+
+.lesson-card:hover {
+  border-left-color: var(--green);
+  background: rgba(0, 255, 65, 0.04);
+}
+
+.lesson-card--running {
+  border-left-color: var(--green);
+  background: rgba(0, 255, 65, 0.07);
+  box-shadow: inset 0 0 20px rgba(0, 255, 65, 0.04);
+}
+
+.lesson-card-prompt {
+  flex-shrink: 0;
+  color: var(--green-dim);
+  font-size: 0.65rem;
+}
+
+.lesson-card-id {
+  flex-shrink: 0;
+  font-size: 0.63rem;
+  color: var(--amber);
+  min-width: 4.5em;
+  letter-spacing: 0.05em;
+}
+
+.lesson-card-label {
+  flex: 1;
+  font-size: 0.68rem;
+  color: var(--green);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.lesson-card--running .lesson-card-label {
+  text-shadow: 0 0 8px var(--green-glow);
+}
+
+.lesson-card-badge {
+  flex-shrink: 0;
+  font-size: 0.52rem;
+  color: var(--amber-dim);
+  border: 1px solid var(--amber-dim);
+  padding: 0 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.lesson-card-run {
+  flex-shrink: 0;
+  padding: 0.18rem 0.5rem;
+  background: transparent;
+  border: 1px solid var(--muted);
+  color: var(--muted);
+  font-family: var(--font);
+  font-size: 0.58rem;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.1s;
+}
+
+.lesson-card-run:hover {
+  color: var(--green);
+  border-color: var(--green);
+  box-shadow: 0 0 8px var(--green-glow);
+}
+
+.lesson-card-run--running {
+  color: var(--green);
+  border-color: var(--green);
+  box-shadow: 0 0 10px var(--green-glow);
+  animation: pulse-border 2s ease-in-out infinite;
+}
+
+/* ── Terminal view ───────────────────────────────────────────────── */
+.terminal-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--green-dim);
+  background: var(--bg-panel);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.08), inset 0 0 60px rgba(0,0,0,0.5);
+}
+
+/* corner brackets */
+.terminal-view::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid transparent;
+  outline: 1px solid rgba(0, 255, 65, 0.06);
+  outline-offset: 4px;
+}
+
+.terminal-view-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.5);
+  gap: 0.5rem;
+}
+
+.terminal-view-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.terminal-view-indicator {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  flex-shrink: 0;
+  animation: blink 1.2s step-end infinite;
+}
+
+.terminal-view-title {
+  font-size: 0.72rem;
+  color: var(--cyan);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+}
+
+.terminal-view-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.terminal-view-stop {
+  padding: 0.2rem 0.6rem;
+  background: transparent;
+  border: 1px solid var(--amber-dim);
+  color: var(--amber-dim);
+  font-family: var(--font);
+  font-size: 0.62rem;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.1s;
+}
+
+.terminal-view-stop:hover:not(:disabled) {
+  color: var(--red);
+  border-color: var(--red);
+  box-shadow: 0 0 10px rgba(255, 42, 0, 0.3);
+}
+
+.terminal-view-stop:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.terminal-view-close {
+  padding: 0.2rem 0.6rem;
+  background: transparent;
+  border: 1px solid var(--muted);
+  color: var(--muted);
+  font-family: var(--font);
+  font-size: 0.62rem;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.1s;
+}
+
+.terminal-view-close:hover {
+  color: var(--green);
+  border-color: var(--green);
+  box-shadow: 0 0 8px var(--green-glow);
+}
+
+.terminal-view-container {
+  flex: 1;
+  padding: 0.5rem;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-view-container .xterm { padding: 0.25rem; }
+.terminal-view-container .xterm-viewport { background: transparent !important; }
+
+/* ── Animations ──────────────────────────────────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes pulse-border {
+  0%, 100% { box-shadow: 0 0 8px var(--green-glow); }
+  50%       { box-shadow: 0 0 16px var(--green-glow), 0 0 4px var(--green); }
+}
+
+@keyframes flicker {
+  0%, 95%, 100%  { opacity: 1; }
+  96%            { opacity: 0.85; }
+  97%            { opacity: 1; }
+  98%            { opacity: 0.7; }
+  99%            { opacity: 1; }
+}
