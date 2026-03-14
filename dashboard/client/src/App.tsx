@@ -29,17 +29,29 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1 className="app-title">
-          <span className="app-title-prefix">[SPK]</span>
-          AI_DEVS4 // AGENT_TERMINAL
-        </h1>
-        <span className="app-subtitle">
-          ▸ system przesyłek konduktorskich &nbsp;·&nbsp; rok systemu 14 &nbsp;·&nbsp; węzeł centralny
-        </span>
+        <div className="app-header-left">
+          <h1 className="app-title">
+            <span className="app-title-bracket">[</span>
+            R-NET
+            <span className="app-title-bracket">]</span>
+            <span className="app-title-sep"> // </span>
+            UNIT-05
+          </h1>
+          <span className="app-subtitle">
+            resistance network &nbsp;·&nbsp; temporal operative &nbsp;·&nbsp; anchor year 2026
+          </span>
+        </div>
         <div className="app-status-bar">
-          <span><span className="app-status-dot" />NET_OK</span>
-          <span>AUTH: {runningLessonIds.size > 0 ? "ACTIVE" : "IDLE"}</span>
-          <span>PROC: {runningLessonIds.size}</span>
+          <span className="app-status-item">
+            <span className="app-status-dot" />
+            UPLINK_OK
+          </span>
+          <span className="app-status-item">
+            CLEARANCE: <span className="app-status-value">SHADOW-TIER</span>
+          </span>
+          <span className="app-status-item">
+            ACTIVE_OPS: <span className="app-status-value">{runningLessonIds.size}</span>
+          </span>
         </div>
       </header>
       <main className="app-main">
@@ -61,14 +73,18 @@ export default function App() {
           ) : (
             <div className="app-placeholder">
               <pre className="app-placeholder-ascii">{`
- ██████╗ ██████╗ ███████╗
-██╔════╝ ██╔══██╗██╔════╝
-╚█████╗  ██████╔╝█████╗
- ╚═══██╗ ██╔═══╝ ██╔══╝
-██████╔╝ ██║     ███████╗
-╚═════╝  ╚═╝     ╚══════╝
-              `}</pre>
-              <span className="app-placeholder-text">▸ wybierz moduł i naciśnij [RUN] _</span>
+ _   _ _   _ ___ _____      ___  ____
+| | | | \\ | |_ _|_   _|    / _ \\| ___|
+| | | |  \\| || |  | |_____| | | |___ \\
+| |_| | |\\  || |  | |_____| |_| |___) |
+ \\___/|_| \\_|___| |_|      \\___/|____/
+`}</pre>
+              <div className="app-placeholder-tagline">
+                "The future is not written. We write it."
+              </div>
+              <span className="app-placeholder-text">
+                ▸ select mission and press [EXECUTE] _
+              </span>
             </div>
           )}
         </section>

@@ -29,15 +29,15 @@ export function LessonList({ onRun, activeLessonId, runningLessonIds }: LessonLi
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="lesson-list-loading">▸ ładowanie modułów...</div>;
-  if (error) return <div className="lesson-list-error">✖ błąd: {error}</div>;
+  if (loading) return <div className="lesson-list-loading">▸ fetching mission log...</div>;
+  if (error) return <div className="lesson-list-error">✖ uplink error: {error}</div>;
 
   return (
     <div className="lesson-list">
-      <h2 className="lesson-list-title">// moduły / lekcje</h2>
+      <h2 className="lesson-list-title">// mission log</h2>
       {runningLessonIds.size > 0 && (
         <div className="lesson-list-running-hint">
-          ▸ aktywne procesy: {runningLessonIds.size}
+          ▸ ops running: {runningLessonIds.size}
         </div>
       )}
       <ul className="lesson-cards">
@@ -52,15 +52,15 @@ export function LessonList({ onRun, activeLessonId, runningLessonIds }: LessonLi
               {lesson.label}
             </span>
             {lesson.longRunning && (
-              <span className="lesson-card-badge">srv</span>
+              <span className="lesson-card-badge">daemon</span>
             )}
             <button
               type="button"
               className={`lesson-card-run ${isActive(lesson.id) ? "lesson-card-run--running" : ""}`}
               onClick={() => onRun(lesson.id, lesson.label)}
-              title={isActive(lesson.id) ? "Uruchomione – kliknij aby zobaczyć terminal" : `Uruchom ${lesson.id}`}
+              title={isActive(lesson.id) ? "Mission active – view terminal" : `Execute ${lesson.id}`}
             >
-              {isActive(lesson.id) ? "● on" : "run"}
+              {isActive(lesson.id) ? "● live" : "exec"}
             </button>
           </li>
         ))}

@@ -76,10 +76,12 @@ export function TerminalView({ lessonId, lessonLabel, onClose, onRunEnded }: Ter
         if (timeoutId) clearTimeout(timeoutId);
         if (rafId) cancelAnimationFrame(rafId);
       };
-      term.writeln(`\x1b[33m┌─────────────────────────────────────────────┐\x1b[0m`);
-      term.writeln(`\x1b[33m│ \x1b[36mMODUŁ:\x1b[0m ${lessonLabel}`);
-      term.writeln(`\x1b[33m│ \x1b[36mSTATUS:\x1b[0m \x1b[32minicjalizacja...\x1b[0m`);
-      term.writeln(`\x1b[33m└─────────────────────────────────────────────┘\x1b[0m`);
+
+      term.writeln(`\x1b[33m┌──────────────────────────────────────────────────┐\x1b[0m`);
+      term.writeln(`\x1b[33m│\x1b[0m \x1b[32mR-NET\x1b[0m // \x1b[36mUNIT-05\x1b[0m \x1b[33m│\x1b[0m MISSION TERMINAL`);
+      term.writeln(`\x1b[33m│\x1b[0m OP: \x1b[33m${lessonLabel}\x1b[0m`);
+      term.writeln(`\x1b[33m│\x1b[0m STATUS: \x1b[32minitializing...\x1b[0m`);
+      term.writeln(`\x1b[33m└──────────────────────────────────────────────────┘\x1b[0m`);
       term.writeln("");
 
       fetch(`/api/lessons/${encodeURIComponent(lessonId)}/run`, { method: "POST" })
@@ -96,12 +98,12 @@ export function TerminalView({ lessonId, lessonLabel, onClose, onRunEnded }: Ter
             let msg = typeof event.data === "string" ? event.data : "";
             msg = msg.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
             termRef.current?.write(msg);
-            if (msg.includes("[Process exited") || msg.includes("[Zatrzymano]")) {
+            if (msg.includes("[Process exited") || msg.includes("[TERMINATED]")) {
               onRunEnded?.(lessonId);
             }
           };
           ws.onclose = () => {
-            termRef.current?.writeln("\n\x1b[33m[POŁĄCZENIE ZAMKNIĘTE]\x1b[0m");
+            termRef.current?.writeln("\n\x1b[33m[UPLINK CLOSED]\x1b[0m");
             setRunId(null);
           };
         })
@@ -130,7 +132,7 @@ export function TerminalView({ lessonId, lessonLabel, onClose, onRunEnded }: Ter
     setStopping(true);
     fetch(`/api/lessons/run/${encodeURIComponent(runId)}/stop`, { method: "POST" })
       .then(() => {
-        termRef.current?.writeln?.("\n\x1b[31m[PROCES ZATRZYMANY]\x1b[0m");
+        termRef.current?.writeln?.("\n\x1b[31m[MISSION TERMINATED]\x1b[0m");
         setRunId(null);
         onRunEnded?.(lessonId);
       })
@@ -143,16 +145,16 @@ export function TerminalView({ lessonId, lessonLabel, onClose, onRunEnded }: Ter
         <div className="terminal-view-header">
           <div className="terminal-view-title-wrap">
             <span className="terminal-view-indicator" style={{ background: "#ff2a00", boxShadow: "0 0 8px #ff2a00" }} />
-            <span className="terminal-view-title">✖ {lessonLabel}</span>
+            <span className="terminal-view-title">✖ UPLINK FAILED — {lessonLabel}</span>
           </div>
           <div className="terminal-view-actions">
             <button type="button" className="terminal-view-close" onClick={onClose}>
-              [zamknij]
+              [disconnect]
             </button>
           </div>
         </div>
         <div className="terminal-view-container" style={{ color: "#ff2a00", padding: "1rem", fontSize: "0.75rem" }}>
-          ✖ błąd: {error}
+          ✖ error: {error}
         </div>
       </section>
     );
@@ -172,13 +174,13 @@ export function TerminalView({ lessonId, lessonLabel, onClose, onRunEnded }: Ter
               className="terminal-view-stop"
               onClick={handleStop}
               disabled={stopping}
-              title="Zatrzymaj proces"
+              title="Terminate mission"
             >
-              {stopping ? "[...]" : "[kill]"}
+              {stopping ? "[...]" : "[terminate]"}
             </button>
           )}
           <button type="button" className="terminal-view-close" onClick={onClose}>
-            [zamknij]
+            [disconnect]
           </button>
         </div>
       </div>
