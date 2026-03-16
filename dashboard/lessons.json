@@ -27,5 +27,12 @@
     "cwd": "s01e04",
     "command": "npm",
     "args": ["run", "start"]
+  },
+  {
+    "id": "s01e05",
+    "label": "Lekcja 5 – Agent Railway (X-01)",
+    "cwd": "s01e05",
+    "command": "npm",
+    "args": ["run", "dev"]
   }
 ]

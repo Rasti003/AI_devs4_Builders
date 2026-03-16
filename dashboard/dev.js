@@ -5,7 +5,11 @@ const root = __dirname;
 const serverDir = path.join(root, "server");
 const clientDir = path.join(root, "client");
 
-const server = spawn("npx", ["ts-node", "server/index.ts"], {
+// Kompilujemy serwer przed uruchomieniem (ts-node crashuje cicho na Windows)
+const { execSync } = require("child_process");
+execSync("npx tsc -p tsconfig.server.json", { cwd: root, stdio: "inherit" });
+
+const server = spawn("node", ["dist/server/index.js"], {
   cwd: root,
   stdio: "inherit",
   env: { ...process.env, DASHBOARD_ROOT: root },
