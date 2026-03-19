@@ -4,4 +4,7 @@ dist/
 .env
 npm-debug.log*
 *.log
+# Pliki projektowania/planowania
+*.md
+!CLAUDE.md
 
