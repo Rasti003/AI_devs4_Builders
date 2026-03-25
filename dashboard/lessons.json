@@ -34,5 +34,33 @@
     "cwd": "s01e05",
     "command": "npm",
     "args": ["run", "dev"]
+  },
+  {
+    "id": "s02e01",
+    "label": "S02E01 – Kategoryzacja towarów",
+    "cwd": "s02e01",
+    "command": "npm",
+    "args": ["run", "dev"]
+  },
+  {
+    "id": "s02e02",
+    "label": "S02E02 – Agent elektryczny (vision)",
+    "cwd": "s02e02",
+    "command": "npm",
+    "args": ["run", "dev"]
+  },
+  {
+    "id": "s02e03",
+    "label": "S02E03 – Kompresja logów awarii",
+    "cwd": "s02e03",
+    "command": "npm",
+    "args": ["run", "dev"]
+  },
+  {
+    "id": "s02e04",
+    "label": "S02E04 – Agent Mailbox",
+    "cwd": "s02e04",
+    "command": "npm",
+    "args": ["run", "dev"]
   }
 ]
