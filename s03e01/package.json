@@ -1,0 +1,19 @@
+{
+  "name": "s03e01",
+  "version": "1.0.0",
+  "description": "AI Devs 4 - sensor anomaly detection",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node index.ts"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
